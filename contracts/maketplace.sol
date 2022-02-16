@@ -14,10 +14,7 @@ contract nftmarketplace{
 
 
 
-       struct nftdetails {
-        string text;
-        bool completed;
-    }
+       mapping (address=>uint) balance;
        mapping(address => mapping( uint => uint)) private nftprices;
        
 
@@ -30,21 +27,19 @@ contract nftmarketplace{
      }
 
     
-     function buynft(address nftcontractaddress ,uint tokenid,uint nftprice)public payable {
+     function buynft(address nftcontractaddress ,uint tokenid)public payable {
 
           require(msg.value==nftprices[nftcontractaddress][tokenid]);
           nft _nft=nft(nftcontractaddress);
+          uint marketplacefees=(nftprices[nftcontractaddress][tokenid]*2)/100; 
+          uint price=nftprices[nftcontractaddress][tokenid]-marketplacefees;
+
+          balance[_nft.ownerOf(tokenid)]+=price;
 
           _nft.transferFrom(_nft.ownerOf(tokenid),msg.sender,tokenid);  
      }
 
-      function sellnft(address nftcontractaddress ,uint tokenid,uint nftprice)public payable {
-
-          require(msg.value==price);
-          nft _nft=nft(nftcontractaddress);
-
-          _nft.transferFrom(_nft.ownerOf(tokenid),msg.sender,tokenid);  
-     }
+    functio
 
 
 }
