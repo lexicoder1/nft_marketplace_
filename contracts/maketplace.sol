@@ -18,7 +18,7 @@ contract nftmarketplace{
        mapping(address => mapping( uint => uint)) private nftprices;
        
 
-     function setsellnftprice(address nftcontractaddress ,uint tokenid,uint nftprice)public payable {
+     function sellnft(address nftcontractaddress ,uint tokenid,uint nftprice)public payable {
            nft _nft=nft(nftcontractaddress);
           require(_nft.ownerOf(tokenid)==msg.sender);
           nftprices[nftcontractaddress][tokenid]=nftprice;
@@ -30,6 +30,8 @@ contract nftmarketplace{
      function buynft(address nftcontractaddress ,uint tokenid)public payable {
 
           require(msg.value==nftprices[nftcontractaddress][tokenid]);
+          require(msg.value>0); 
+          // require(_nft.ownerOf(tokenid)==msg.sender);
           nft _nft=nft(nftcontractaddress);
           uint marketplacefees=(nftprices[nftcontractaddress][tokenid]*2)/100; 
           uint price=nftprices[nftcontractaddress][tokenid]-marketplacefees;
@@ -39,7 +41,17 @@ contract nftmarketplace{
           _nft.transferFrom(_nft.ownerOf(tokenid),msg.sender,tokenid);  
      }
 
-    functio
+    function withdraw()public {
+         require(balance[msg.sender]>0);
+         payable(msg.sender).transfer( balance[msg.sender]);
 
+
+    }
+    function checkbal()public view returns(uint){
+         return balance[msg.sender];
+    }
+
+   
+   
 
 }
